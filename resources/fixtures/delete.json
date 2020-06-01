@@ -1,0 +1,10 @@
+{
+    "title": "Sega saturn",
+    "category": "Consoles",
+    "price": "299.99",
+    "description": "32 bits 5° geração de console",
+    "producers": [
+        "Sega"
+    ],
+    "cover": "sega.jpg"
+}

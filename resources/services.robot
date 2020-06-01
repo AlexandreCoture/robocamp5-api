@@ -1,6 +1,7 @@
 ***Settings***
 Documentation       Aqui nós vamos encapstular algumas cchamadas de serviço
 
+Library         Collections
 Library         RequestsLibrary
 Library         libs/database.py
 
@@ -12,7 +13,7 @@ ${user_email}       papito@ninjapixel.com
 ${user_pass}        pwd123
 
 ***Keywords***
-Auth Token
+Set Suite Var Auth Token
         [Arguments]     ${email}        ${password}
         Create Session      pixel       ${base_url}
 
@@ -26,7 +27,7 @@ Auth Token
         Set Suite Variable      ${token}       
 
 Post Product
-    [Arguments]     ${payload}      ${token}    ${remove}
+    [Arguments]     ${payload}      ${remove}
 
         Run Keyword If     "${remove}" == "before_remove"
         ...                 Remove Product By Title         ${payload['title']}
@@ -39,3 +40,21 @@ Post Product
 
         ${resp}             Post Request        pixel           /products       data=${payload}         headers=${headers}
         [return]        ${resp}
+
+Get Product
+    [Arguments]     ${id}
+
+    Create Session      pixel       ${base_url}
+    &{headers}=     Create Dictionary       Authorization=${token}          Content-Type=application/json
+
+    ${resp}             Get Request        pixel           /products/${id}         headers=${headers}
+    [return]        ${resp}
+
+Delete Product
+    [Arguments]     ${id}
+
+    Create Session      pixel       ${base_url}
+    &{headers}=     Create Dictionary       Authorization=${token}          Content-Type=application/json
+
+    ${resp}           Delete Request        pixel           /products/${id}         headers=${headers}
+    [return]        ${resp}
