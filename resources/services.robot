@@ -15,16 +15,24 @@ ${user_pass}        pwd123
 ***Keywords***
 Set Suite Var Auth Token
         [Arguments]     ${email}        ${password}
-        Create Session      pixel       ${base_url}
 
-        &{headers}=     Create Dictionary       Content-Type=application/json
-
-        &{payload}=       Create Dictionary     email=${email}     password=${password}
-        ${resp}=                Post Request            pixel   /auth           data=${payload}         headers=${headers}
-
+        ${resp}         Post Token           ${email}        ${password}
+        
         ${token}        Convert To String       JWT ${resp.json()['token']}
 
         Set Suite Variable      ${token}       
+
+Post Token
+    [Arguments]     ${email}        ${password}
+
+    Create Session      pixel       ${base_url}
+
+    &{headers}=     Create Dictionary       Content-Type=application/json
+
+    &{payload}=       Create Dictionary     email=${email}     password=${password}
+    ${resp}=                Post Request            pixel   /auth           data=${payload}         headers=${headers}
+
+    [Return]        ${resp}
 
 Post Product
     [Arguments]     ${payload}      ${remove}
@@ -39,6 +47,20 @@ Post Product
         
 
         ${resp}             Post Request        pixel           /products       data=${payload}         headers=${headers}
+        [return]        ${resp}
+
+Put Product
+    [Arguments]     ${product_id}      ${payload}
+
+        Remove Product By Title         ${payload['title']}
+        Create Session      pixel       ${base_url}
+        
+        
+        &{headers}=     Create Dictionary       Authorization=${token}          Content-Type=application/json
+
+        
+
+        ${resp}             Put Request        pixel           /products/${product_id}       data=${payload}         headers=${headers}
         [return]        ${resp}
 
 Get Product
