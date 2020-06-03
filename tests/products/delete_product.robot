@@ -16,7 +16,7 @@ Delete product
 
     ${resp}         Delete Product             ${id}
 
-    Status Should Be        201        ${resp}
+    Status Should Be        204       ${resp}
 
 Product Not Found
     [Tags]  not_found
@@ -24,4 +24,4 @@ Product Not Found
 
     ${resp}        Delete Product             1500
 
-    Status Should Be        401       ${resp}
+    Status Should Be        204       ${resp}
